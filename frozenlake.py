@@ -2,6 +2,7 @@ import gymnasium as gym
 from gymnasium.envs.toy_text.frozen_lake import generate_random_map
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 
 # Initialize the environment
 env = gym.make('FrozenLake-v1', desc=[
@@ -89,12 +90,12 @@ for episode in range(num_episodes):
             break
 
     # Apply exploration rate decay only after 1000 episodes
-    if episode < 2000:
+    if episode < 6000:
         exploration_rate = max_exploration_rate
     else:
         exploration_rate = min_exploration_rate + (
-        max_exploration_rate - min_exploration_rate
-    ) * np.exp(-exploration_decay_rate * (episode - 2000))
+            max_exploration_rate - min_exploration_rate
+        ) * np.exp(-exploration_decay_rate * (episode - 6000))
 
     # Store total rewards for this episode
     rewards_all_episodes.append(total_rewards)
@@ -106,3 +107,14 @@ for episode in range(num_episodes):
 
 # Close the environment
 env.close()
+
+# Plotting the rewards
+rewards_per_thousand_episodes = np.split(np.array(rewards_all_episodes), num_episodes / 1000)
+average_rewards = [np.mean(rewards) for rewards in rewards_per_thousand_episodes]
+
+plt.plot(range(1, len(average_rewards) + 1), average_rewards)
+plt.xlabel('Episodes (in thousands)')
+plt.ylabel('Average Reward')
+plt.title('Average Reward vs Episodes')
+plt.grid(True)
+plt.show()
