@@ -2,6 +2,8 @@ import gymnasium as gym
 import numpy as np
 import random
 import time
+#Import the environment configurations from the env_config.py file, you can also add more environments to the file
+from env_config import env_12x12, env_20x20
 
 class CustomFrozenLakeEnv(gym.Env):
     #A custom environment for the Frozen Lake game that modifies rewards based on agent's progress.
@@ -155,31 +157,9 @@ class CustomFrozenLakeEnv(gym.Env):
         self.step_count = 0
         return state, info
 
-# Initialize and wrap the environment
-env_desc = [
-    "SFFFFFFFFHFFFFFHHHHF",
-    "FFFFFFFFFHFFFFFHHHHF",
-    "HHHHFFFFFFFFFFFFFFFH",
-    "HHHHFFFFFFFFFFFFFFFH",
-    "HHFFFHHFFFFFFFFFFFFF",
-    "FFFFFFFFFFHFFFFHFFFH",
-    "FFFFFFFFFFHFFFFHFFFH",
-    "FFFFFFFFFHFFFFFFFFFF",
-    "FFFFFFFFFHFFFFFFFFFF",
-    "FFHHHFFFFFFHHFFFFFFH",
-    "FFHHFFFFFHHHFFFFFFFH",
-    "FFHHFFFFFHHHFFFFFFFH",
-    "FFFFHFFFFFFFHHFFFFFF",
-    "FFFFHFFFFFFFHHFFFFFF",
-    "FFFFHFFFFHFFFFFFFFFH",
-    "FFFFHFFFFHHHFFHHHFFF",
-    "FFFFHFFFFHHHFFHHHFFF",
-    "FFFFHFFFFFFFFFFHHFFF",
-    "FFFFHFFFFFFFFFFHHFFF",
-    "FFFFFHHFFFFHHHHHFFFG",
-]
 
-env = gym.make('FrozenLake-v1', desc=env_desc, is_slippery=False)
+env_use = env_12x12  # Change this to change what environment to use
+env = gym.make('FrozenLake-v1', desc=env_use, is_slippery=False)
 env = CustomFrozenLakeEnv(env)
 
 # Specify state and action space sizes
@@ -190,9 +170,9 @@ action_space_size = 4  #How many actions/choices at each step? = 4 actions: left
 q_table = np.zeros((state_space_size, action_space_size))
 
 # Hyperparameters
-num_episodes = 30000
+num_episodes = 35000
 max_steps_per_episode = 500
-learning_rate = 0.06  # 𝛼 (alpha)
+learning_rate = 0.05  # 𝛼 (alpha)
 discount_rate = 0.95  # 𝛾 (gamma)
 exploration_rate = 1  # ε (epsilon)
 max_exploration_rate = 1
@@ -229,7 +209,7 @@ for episode in range(num_episodes):
             break
 
     # Apply exploration rate decay only after "ep_rate" episodes
-    ep_rate = 7500 #Change this value to adjust when to start decaying the exploration rate
+    ep_rate = 10000 #Change this value to adjust when to start decaying the exploration rate
     if episode < ep_rate:
         exploration_rate = max_exploration_rate
     else:
@@ -250,7 +230,7 @@ for episode in range(num_episodes):
 env.close()
 
 # Set the render mode to 'human' for visualization of last episode, but use the same environment
-env = gym.make('FrozenLake-v1', desc=env_desc, is_slippery=False, render_mode='human')
+env = gym.make('FrozenLake-v1', desc=env_use, is_slippery=False, render_mode='human')
 env = CustomFrozenLakeEnv(env)
 
 
