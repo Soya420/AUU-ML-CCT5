@@ -2,6 +2,7 @@ import gymnasium as gym
 import numpy as np
 import random
 import time
+import matplotlib.pyplot as plt
 #Import the environment configurations from the env_config.py file, you can also add more environments to the file
 from env_config import env_12x12, env_20x20
 
@@ -225,6 +226,18 @@ for episode in range(num_episodes):
     if (episode + 1) % pr_prog == 0:
         avg_reward = np.mean(rewards_all_episodes[-pr_prog:])  # Average of last 100 episodes
         print(f"Episode: {episode + 1}, Average Reward: {avg_reward:.3f}, Exploration Rate: {exploration_rate:.5f}")
+
+
+# Plot the rewards for all episodes
+rewards_per_thousand_episodes = np.split(np.array(rewards_all_episodes), num_episodes / 1000)
+average_rewards = [np.mean(rewards) for rewards in rewards_per_thousand_episodes]
+
+plt.plot(range(1, len(average_rewards) + 1), average_rewards)
+plt.xlabel('Episodes (in thousands)')
+plt.ylabel('Average Reward')
+plt.title('Average Reward vs Episodes')
+plt.grid(True)
+plt.show()
 
 # Close the environment
 env.close()
