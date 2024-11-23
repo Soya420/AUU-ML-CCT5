@@ -159,7 +159,7 @@ class CustomFrozenLakeEnv(gym.Env):
         return state, info
 
 
-env_use = env_12x12  # Change this to change what environment to use
+env_use = env_12x12 # Change this to change what environment to use
 env = gym.make('FrozenLake-v1', desc=env_use, is_slippery=False)
 env = CustomFrozenLakeEnv(env)
 
