@@ -104,6 +104,10 @@ class CustomFrozenLakeEnv(gym.Env):
         # Get the current position of the agent
         position = self._get_coordinates(state)
 
+        if done and position == self.goal_position:
+            # Reward the agent for reaching the goal
+            reward += 1
+
         # Penalize each step to encourage shorter paths
         if self.step_count > 25:
             # Increase the penalty a bit after 25 steps
