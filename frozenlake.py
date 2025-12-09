@@ -171,14 +171,14 @@ action_space_size = 4  #How many actions/choices at each step? = 4 actions: left
 q_table = np.zeros((state_space_size, action_space_size))
 
 # Hyperparameters
-num_episodes = 35000
+num_episodes = 30000
 max_steps_per_episode = 500
 learning_rate = 0.05  # 𝛼 (alpha)
 discount_rate = 0.95  # 𝛾 (gamma)
 exploration_rate = 1  # ε (epsilon)
 max_exploration_rate = 1
 min_exploration_rate = 0.00001
-exploration_decay_rate = 0.00052
+exploration_decay_rate = 0.00055
 
 # List to store rewards for each episode
 rewards_all_episodes = []
@@ -210,7 +210,7 @@ for episode in range(num_episodes):
             break
 
     # Apply exploration rate decay only after "ep_rate" episodes
-    ep_rate = 10000 #Change this value to adjust when to start decaying the exploration rate
+    ep_rate = 8000 #Change this value to adjust when to start decaying the exploration rate
     if episode < ep_rate:
         exploration_rate = max_exploration_rate
     else:
@@ -229,11 +229,11 @@ for episode in range(num_episodes):
 
 
 # Plot the rewards for all episodes
-rewards_per_thousand_episodes = np.split(np.array(rewards_all_episodes), num_episodes / 1000)
+rewards_per_thousand_episodes = np.split(np.array(rewards_all_episodes), num_episodes / 100)
 average_rewards = [np.mean(rewards) for rewards in rewards_per_thousand_episodes]
 
 plt.plot(range(1, len(average_rewards) + 1), average_rewards)
-plt.xlabel('Episodes (in thousands)')
+plt.xlabel('Episodes (in 100s)')
 plt.ylabel('Average Reward')
 plt.title('Average Reward vs Episodes')
 plt.grid(True)
